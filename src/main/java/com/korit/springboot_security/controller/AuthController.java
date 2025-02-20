@@ -22,4 +22,9 @@ public class AuthController {
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok().body(null);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable int userId) {
+        return ResponseEntity.ok().body(null);
+    }
 }
