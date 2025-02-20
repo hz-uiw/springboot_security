@@ -1,7 +1,7 @@
 package com.korit.springboot_security.repository;
 
-import com.korit.springboot_study.entity.User;
-import com.korit.springboot_study.mapper.UserMapper;
+import com.korit.springboot_security.entity.User;
+import com.korit.springboot_security.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;

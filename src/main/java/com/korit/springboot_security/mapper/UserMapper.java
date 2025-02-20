@@ -1,6 +1,6 @@
 package com.korit.springboot_security.mapper;
 
-import com.korit.springboot_study.entity.User;
+import com.korit.springboot_security.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.korit.springboot_security.repository;
 
-import com.korit.springboot_study.entity.UserRole;
-import com.korit.springboot_study.mapper.UserRoleMapper;
+import com.korit.springboot_security.entity.UserRole;
+import com.korit.springboot_security.mapper.UserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

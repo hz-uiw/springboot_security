@@ -1,6 +1,6 @@
 package com.korit.springboot_security.mapper;
 
-import com.korit.springboot_study.entity.UserRole;
+import com.korit.springboot_security.entity.UserRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
