@@ -5,10 +5,12 @@ import com.korit.springboot_security.dto.response.RespAuthDto;
 import com.korit.springboot_security.entity.User;
 import com.korit.springboot_security.repository.UserRepository;
 import com.korit.springboot_security.security.jwt.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -18,41 +20,67 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
     @Autowired
     private JwtUtil jwtUtil;
-
     @Autowired
     private RedisTokenService redisTokenService;
 
     public RespAuthDto login(ReqSigninDto reqSigninDto) {
-        User foundUser = userRepository.findByUserName(reqSigninDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
-        if (passwordEncoder.matches(reqSigninDto.getPassword(), foundUser.getPassword())) {
-            throw new BadCredentialsException("사용자 정보를 확인하세요");
+        User foundUser = userRepository.findByUsername(reqSigninDto.getUsername())
+               .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
+
+        if (!passwordEncoder.matches(reqSigninDto.getPassword(), foundUser.getPassword())) {
+            throw new BadCredentialsException("사용자 정보를 확인하세요.");
         }
 
-        String accessToken = jwtUtil.generateToken(
-                Integer.toString(foundUser.getUserId()),    // "" + foundUser.getUserId() 방법도 가능
-                foundUser.getUsername(),
-                false
-        );
-
-        String refreshToken = jwtUtil.generateToken
-                (Integer.toString(foundUser.getUserId()),   // "" + foundUser.getUserId() 방법도 가능
+        String accessToken = jwtUtil
+                .generateToken(Integer.toString(
+                        foundUser.getUserId()),
                         foundUser.getUsername(),
-                        true
-                );
+                        false);
+        String refreshToken = jwtUtil
+                .generateToken(Integer.toString(
+                                foundUser.getUserId()),
+                        foundUser.getUsername(),
+                        true);
 
         redisTokenService.setAccess(reqSigninDto.getUsername(), accessToken, Duration.ofMinutes(60));
-        redisTokenService.setRefresh(reqSigninDto.getUsername(), accessToken, Duration.ofMinutes(7));
+        redisTokenService.setRefresh(reqSigninDto.getUsername(), refreshToken, Duration.ofDays(7));
 
         return RespAuthDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    public RespAuthDto refresh(String refreshToken) {
+        Claims claims = jwtUtil.parseToken(refreshToken);
+        if(claims == null) {
+            return null;
+        }
+        String username = claims.getSubject();
+        String userId = claims.getId();
+        String redisRefresh = redisTokenService.getRefresh(username);
+        if(redisRefresh == null || !redisRefresh.equals(refreshToken)) {
+            return null;
+        }
+        String newAccessToken = jwtUtil.generateToken(userId, username, false);
+        return RespAuthDto.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

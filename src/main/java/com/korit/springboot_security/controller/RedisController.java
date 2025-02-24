@@ -36,7 +36,7 @@ public class RedisController {
 
     @PostMapping("/{key}/{value}")
     public ResponseEntity<?> set(@PathVariable String key, @PathVariable String value) {
-        // user:1:name, "권민창"
+        // user:1:name, "김준일"
         redisTemplate.opsForValue().set("user:" + key + ":name", value, Duration.ofSeconds(60));    //문자열 저장
         return ResponseEntity.ok().build();
     }

@@ -7,21 +7,23 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.xml.crypto.Data;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
+
     private Key key;
     private Long accessTokenExpire;
     private Long refreshTokenExpire;
 
     public JwtUtil(@Value("${jwt.secret}") String secret) {
         key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        // AccessToken 적정시간: 10분 ~ 1시간 (보안이 중요할수록 짧게 설정)
+        // AccessToken 적정 시간 10분 ~ 1시간(보안이 중요할수록 짧게)
         accessTokenExpire = 1000l * 60 * 60;
-        // RefreshToken 적정 시간: 7일 ~ 90일 (보안이 중요할수록 짧게 설정)
+        // RefreshToken 적정 시간 7일 ~ 90일(보안이 중요할수록 짧게)
         refreshTokenExpire = 1000l * 60 * 60 * 24 * 7;
     }
 
@@ -38,10 +40,9 @@ public class JwtUtil {
         Claims claims = null;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(key)
-                    .parseClaimsJws(token)
-                    .getBody();
-
+                        .setSigningKey(key)
+                        .parseClaimsJws(token)
+                        .getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -11,13 +11,8 @@ import java.util.Optional;
 
 @Repository
 public class UserRepository {
-
     @Autowired
     private UserMapper userMapper;
-
-    public Optional<User> findByUserName(String username) {
-        return Optional.ofNullable(userMapper.selectByUsername(username));
-    }
 
     public Optional<User> save(User user) {
         try {
@@ -28,13 +23,17 @@ public class UserRepository {
         return Optional.of(user);
     }
 
+    public Optional<User> findByUsername(String username) {
+        return Optional.ofNullable(userMapper.selectByUsername(username));
+    }
+
     public Optional<User> findById(int id) {
         return Optional.ofNullable(userMapper.selectById(id));
     }
 
     public Optional<List<User>> findAll() {
-        List<User> findUsers = userMapper.selectAllUser();
-        return findUsers.isEmpty() ? Optional.empty() : Optional.of(findUsers);
+        List<User> foundUsers = userMapper.selectAll();
+        return foundUsers.isEmpty() ? Optional.empty() : Optional.of(foundUsers);
     }
 
     public Optional<Boolean> updateUserById(User user) {
@@ -45,3 +44,13 @@ public class UserRepository {
         return userMapper.deleteById(id) < 1 ? Optional.empty() : Optional.of(true);
     }
 }
+
+
+
+
+
+
+
+
+
+

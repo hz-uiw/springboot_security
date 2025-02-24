@@ -17,9 +17,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable Integer userId) throws NotFoundException {
+    public ResponseEntity<?> getUser(@PathVariable int userId) throws NotFoundException {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
-
-
 }
+
+
+
+
+
+
+

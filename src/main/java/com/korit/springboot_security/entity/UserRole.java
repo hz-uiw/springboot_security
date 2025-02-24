@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRole {
     private int userRoleId;
     private int userId;
@@ -16,3 +16,11 @@ public class UserRole {
 
     private Role role;
 }
+
+
+
+
+
+
+
+

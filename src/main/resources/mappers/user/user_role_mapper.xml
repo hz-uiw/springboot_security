@@ -7,16 +7,12 @@
 <mapper namespace="com.korit.springboot_security.mapper.UserRoleMapper">
 
     <insert id="insert" keyProperty="userRoleId" useGeneratedKeys="true">
-        insert into
-            user_role_tb
-        values
-            (default, #{userId}, #{roleId})
+        insert into user_role_tb
+        values(default, #{userId}, #{roleId})
     </insert>
 
-
     <insert id="insertSelective">
-        insert into
-            user_role_tb
+        insert into user_role_tb
         select
             0,
             #{userId},
@@ -25,6 +21,7 @@
             role_tb
         where
             role_name = #{roleName}
+
     </insert>
 
 </mapper>
